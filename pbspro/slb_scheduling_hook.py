@@ -2,7 +2,6 @@ import sys
 import os
 import time
 import re
-from xmlrpc.client import boolean
 
 if '/usr/lib64/python3.6' not in sys.path:
     sys.path.append('/usr/lib64/python3.6')
