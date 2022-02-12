@@ -1,0 +1,26 @@
+{
+    "issued_licenses":
+    [
+        "eclipse",
+        "compositional",
+        "parallel",
+        "bparallel",
+        "lgr",
+        "gaslift",
+        "networks",
+        "multisegwells",
+        "ix_base",
+        "ix_compositional",
+        "ix_fm",
+        "ix_tools",
+        "workflow_hf",
+        "workflow_hf_fm",
+        "workflow_hf_tools",
+        "Visage_MPI",
+        "Visage_Basic"
+    ],
+    "interval_time": 15.0,
+    "delay_time": 60.0,
+    "stamp": "/tmp/EclipseLastRun",
+    "lmutil": "abspath/to/lmutil"
+}
