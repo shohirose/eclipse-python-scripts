@@ -1,4 +1,4 @@
-# PBS Hooks for License Schduling of Schlumberger Applications
+# PBS Hooks for License Scheduling of Schlumberger Applications
 
 ## slb_scheduling_hook
 
@@ -22,7 +22,7 @@ qmgr: create resource eclipse_alternatives type = string
 qmgr: create resource eclipse_mr_key type = string
 ```
 
-After you define the above resources, put the resource names in the "resources:" line in `$PBS_HOME/sched_priv/sched_config`, and HUP the scheduler by the following command:
+After you define the above resources, put the resource names in the "resources:" line in `$PBS_HOME/sched_priv/sched_config`. Then, HUP the PBS scheduler using the following commands:
 
 ```terminal
 ps -ef | grep pbs_sched
@@ -38,4 +38,20 @@ qmgr: create hook slb_scheduling
 qmgr: import hook slb_scheduling application/x-python default slb_scheduling_hook.py
 qmgr: import hook slb_scheduling application/x-config default slb_scheduling_hook.json
 qmgr: set hook slb_scheduling event = runjob
+```
+
+### Configuring slb_scheduling_hook
+
+You can modify the following parameters in the hook configuration file, `slb_scheduling_hook.json`:
+
+- issued_licenses: A list of license names issued for your company. If an issued license will not be used in the license scheduling, such as GUI licenses, it should be removed.
+- interval_time: Interval time in seconds from the last Schlumberger application run. This is to avoid a racing condition of license check out.
+- delay_time: Delay time in seconds of license scheduling if licenses are not available.
+- stamp: Absolute path to a time stamp file to check the last Schlumberger application run.
+- lmutil: Absolute path to lmutil command.
+
+If you modify any parameter in the configuration file, you need to re-import the configuration file to apply the change:
+
+```terminal
+qmgr: import hook slb_scheduling application/x-config default slb_scheduling_hook.json
 ```
