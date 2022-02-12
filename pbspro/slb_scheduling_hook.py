@@ -76,7 +76,16 @@ class HookConfiguration:
         Hook configuration file example in JSON format:
         {
             "lmutil"       : "abspath/to/lmutil",
-            "issued_licenses"     : ["eclipse", "compositional", "parallel", "bparallel", "lgr", "networks", "gaslift"],
+            "issued_licenses":
+            [
+                "eclipse",
+                "compositional",
+                "parallel",
+                "bparallel",
+                "lgr",
+                "networks",
+                "gaslift"
+            ],
             "stamp"        : "/tmp/EclipseLastRun",
             "interval_time": 15.0,
             "delay_time"   : 60.0
@@ -127,7 +136,8 @@ class EclipseLicenseChecker:
     def validiate(self, alternatives: list[dict[str, int]]) -> tuple[bool, list[str]]:
         """Validate eclipse_alternatives.
 
-        If Eclipse licenses are not available and no missing licenses is found, it means that there is no valid license alternative.
+        If Eclipse licenses are not available and no missing licenses is found, 
+        it means that there is no valid license alternative.
 
         Returns:
             is_available (bool): Eclipse licenses are available.
@@ -162,12 +172,16 @@ class EclipseMultipleRealizationChecker:
 
     def is_mr_job(self) -> bool:
         """Checks if it is a multiple realization job."""
-        return not self.job.Resource_List['eclipse_mr_key'] and 'ECL_LICS_REQD' in self.job.Variable_List and self.job.Variable_List['ECL_LICS_REQD'] != ''
+        return not self.job.Resource_List['eclipse_mr_key'] and \
+            'ECL_LICS_REQD' in self.job.Variable_List and \
+            self.job.Variable_List['ECL_LICS_REQD'] != ''
 
     def is_another_mr_job_running(self) -> bool:
         """Checks if another multiple realization job from the same group is already running."""
         for other_job in pbs.server().jobs():
-            if other_job.job_state is pbs.JOB_STATE_RUNNING and 'eclipse_mr_key' in other_job.Resource_List and self.job.Resource_List['eclipse_mr_key'] == other_job.Resource_List['eclipse_mr_key']:
+            if other_job.job_state is pbs.JOB_STATE_RUNNING and \
+                'eclipse_mr_key' in other_job.Resource_List and \
+                    self.job.Resource_List['eclipse_mr_key'] == other_job.Resource_List['eclipse_mr_key']:
                 return True
         else:
             return False
@@ -205,7 +219,8 @@ try:
                 mr_alternatives)
             if not is_mr_available:
                 e.reject(
-                    f'Licenses for a multiple realization job are not available. Rejecting the job: missing licenses = {mr_missing_licenses}')
+                    f'Licenses for a multiple realization job are not available. '
+                    f'Rejecting the job: missing licenses = {mr_missing_licenses}')
 
         pbs.logmsg(pbs.LOG_DEBUG,
                    f'Eclipse licenses are available. Accepting the job.')
