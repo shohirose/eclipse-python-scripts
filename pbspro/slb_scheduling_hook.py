@@ -141,11 +141,13 @@ class EclipseLicenseChecker:
                        f'Valid license alternative is found: {alternative}')
             for license, required_num in alternative.items():
                 available_num = self.flexlm.query_license(license)
-                if available_num < required_num and license not in missing_licenses:
-                    missing_licenses.append(license)
+                if available_num < required_num:
+                    if license not in missing_licenses:
+                        missing_licenses.append(license)
                     break
             else:
                 return True, []
+
         return False, missing_licenses
 
     def is_issued(self, licenses) -> bool:
