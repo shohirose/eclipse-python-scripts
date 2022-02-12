@@ -10,7 +10,6 @@ import pbs
 import subprocess as sp
 from pathlib import Path
 import json
-from enum import Enum
 
 
 def parse_alternatives(alternatives: str) -> list[dict[str, int]]:
