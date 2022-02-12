@@ -70,6 +70,7 @@ class HookConfiguration:
         stamp (pathlib.Path): Absolute path to time stamp file.
         interval_time (float): Interval time from the last Eclipse run.
         delay_time (float): Delay time if licenses are not available.
+        license_server (str): License server
 
     Examples:
         Hook configuration file example in JSON format:
