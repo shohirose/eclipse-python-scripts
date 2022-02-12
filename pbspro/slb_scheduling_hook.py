@@ -131,7 +131,7 @@ class EclipseLicenseChecker:
         self.issued_licenses = issued_licenses
         self.flexlm = flexlm
 
-    def validiate(self, alternatives: list[dict[str, int]]) -> tuple[bool, list[str]]:
+    def validate(self, alternatives: list[dict[str, int]]) -> tuple[bool, list[str]]:
         """Validate eclipse_alternatives.
 
         If Eclipse licenses are not available and no missing licenses is found, 
@@ -177,7 +177,7 @@ class EclipseMultipleRealizationChecker:
     def is_another_mr_job_running(self) -> bool:
         """Checks if another multiple realization job from the same group is already running."""
         for other_job in pbs.server().jobs():
-            if other_job.job_state is pbs.JOB_STATE_RUNNING and \
+            if other_job.job_state == pbs.JOB_STATE_RUNNING and \
                 'eclipse_mr_key' in other_job.Resource_List and \
                     self.job.Resource_List['eclipse_mr_key'] == other_job.Resource_List['eclipse_mr_key']:
                 return True
@@ -202,11 +202,11 @@ try:
             e.reject('Too little time passed from the last run. Delaying the job.')
 
     flexlm = FlexLicenseManager(config.lmutil, config.license_server)
-    license_checker = EclipseLicenseChecker(config.licenses, flexlm)
+    license_checker = EclipseLicenseChecker(config.issued_licenses, flexlm)
     mr_checker = EclipseMultipleRealizationChecker()
 
     alternatives = parse_alternatives(j.Resource_List['eclipse_alternatives'])
-    is_available, missing_licenses = license_checker.validiate(alternatives)
+    is_available, missing_licenses = license_checker.validate(alternatives)
 
     if is_available:
         # Check multiple relization
