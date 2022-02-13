@@ -10,12 +10,14 @@ import pbs
 import subprocess as sp
 from pathlib import Path
 import json
+from typing import List, Tuple, Dict
+import traceback
 
 
-def parse_alternatives(alternatives: str) -> list[dict[str, int]]:
+def parse_alternatives(alternatives: str) -> List[Dict[str, int]]:
     """Convert eclipse_alternatives to a list of dictionaries."""
 
-    def to_dict(alt: str) -> dict:
+    def to_dict(alt: str) -> Dict[str, int]:
         """Convert eclipse license request to a dictionary."""
         licenses = [tuple(s.split('=')) for s in alt.split(':')]
         return dict([(key, int(token)) for key, token in licenses])
@@ -127,11 +129,11 @@ class EclipseLicenseChecker:
         flexlm (FlexLicenseManager): FlexLicenseManager object
     """
 
-    def __init__(self, issued_licenses: list[str], flexlm: FlexLicenseManager):
+    def __init__(self, issued_licenses: List[str], flexlm: FlexLicenseManager):
         self.issued_licenses = issued_licenses
         self.flexlm = flexlm
 
-    def validate(self, alternatives: list[dict[str, int]]) -> tuple[bool, list[str]]:
+    def validate(self, alternatives: List[Dict[str, int]]) -> Tuple[bool, List[str]]:
         """Validate eclipse_alternatives.
 
         If Eclipse licenses are not available and no missing licenses is found, 
@@ -158,7 +160,7 @@ class EclipseLicenseChecker:
 
         return False, missing_licenses
 
-    def is_issued(self, licenses) -> bool:
+    def is_issued(self, licenses: Dict[str, int]) -> bool:
         """Check if licenses are issued."""
         return all(license in self.issued_licenses for license in licenses)
 
@@ -236,6 +238,11 @@ try:
 except SystemExit:
     pass
 
+except Exception as err:
+    msg = list(traceback.TracebackException.from_exception(err).format())
+    e = pbs.event()
+    e.reject(f'{e.hook_name} hook failed: {msg}')
+
 except:
     e = pbs.event()
-    e.reject(f'{e.hook_name} hook failed with {sys.exc_info()[:2]}.')
+    e.reject(f'{e.hook_name} hook failed with {sys.exc_info()[:2]}')
