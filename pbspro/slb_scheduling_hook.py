@@ -114,6 +114,9 @@ class HookConfiguration:
             self.interval_time = j.get('interval_time', 15.0)
             self.delay_time = j.get('delay_time', 60.0)
 
+        if not self.lmutil.exists():
+            raise ValueError(f'Path to lmutil in the configuration file is invalid: {self.lmutil}')
+
         try:
             self.license_server = pbs.event(
             ).job.Variable_List['SLBSLS_LICENSE_FILE']
