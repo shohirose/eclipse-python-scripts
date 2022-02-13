@@ -4,12 +4,14 @@
 
 ### Configuring Your Server
 
-This hook is assumed to be run on a linux server, and Python 3.6 packages are available in `/usr/lib64/python3.6`. If the Python version or package path is different, modify the following part in the hook script accordingly:
+This hook is assumed to be run on a linux server, and Python 3.6 packages are available in `/usr/lib64/python3.6`. If the package path is different, modify the following part in the hook script accordingly:
 
 ```python
 if '/usr/lib64/python3.6' not in sys.path:
     sys.path.append('/usr/lib64/python3.6')
 ```
+
+Please note that not all of the funciontalities in the latest Python version, e.g. Python 3.10, are not available since the version of the Python module provided by PBS Professional 2021.1 is 3.6.
 
 ### Configuring PBS Professional
 
